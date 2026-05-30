@@ -11,7 +11,7 @@ require("dotenv").config();
 const app = express();
 
 const limiter = rateLimit({
-  windowMS: 15*60*1000,
+  windowMs: 15*60*1000,
   max: 100,
   message:"TOO many Requests from this IP",
 });
