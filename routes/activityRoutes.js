@@ -1,9 +1,10 @@
 const express = require("express");
 const Activity = require("../models/Activity");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-router.post("/save", async (req, res) => {
+router.post("/save", authMiddleware,async (req, res) => {
   try {
     const { website, title, timeSpent } = req.body;
 
@@ -21,9 +22,11 @@ router.post("/save", async (req, res) => {
   }
 });
 
-router.get("/all", async (req, res) => {
+router.get("/all",authMiddleware, async (req, res) => {
   try {
-    const activities = await Activity.find().sort({ createdAt: -1 });
+    const activities = await Activity.find({
+      user: req.user.id,
+    }).sort({ createdAt: -1 });
 
     res.json(activities);
   } catch (error) {

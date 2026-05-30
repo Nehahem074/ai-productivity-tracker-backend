@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
@@ -14,6 +15,18 @@ router.post("/register", async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
+
+    if (!validator.isEmail(email)) {
+  return res.status(400).json({
+    message: "Invalid Email",
+  });
+}
+
+if (password.length < 6) {
+  return res.status(400).json({
+    message: "Password must be at least 6 characters",
+  });
+}
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
